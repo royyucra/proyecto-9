@@ -3,48 +3,56 @@ from figuras import *
 from visualizador import Visualizador3DPlotly, cargar_datos, guardar_datos
 
 def main():
-    st.title("Visualización de Superficies 3D")
-    opciones = ["Plano", "Paraboloide", "Sinusoide", "Hiperboloide", "Cono", "Cilindro", 
-                "Hiperboloide Una Hoja", "Hiperboloide Dos Hojas", "Esfera", "Cargar Datos"]
+    st.title("Visualizador de Superficies 3D")
 
-    seleccion = st.sidebar.selectbox("Seleccione el tipo de superficie:", opciones)
+    tipos = ["Plano", "Paraboloide", "Sinusoide", "Hiperboloide", "Conica", "Toroide", "Cubo", "Piramide", "Cilindro"]
+    tipo = st.selectbox("Seleccione el tipo de superficie:", tipos)
 
-    if seleccion == "Plano":
-        pendiente = st.sidebar.number_input("Pendiente del plano:", value=1.0)
-        superficie = Plano((-5, 5), (-5, 5), pendiente)
-    elif seleccion == "Paraboloide":
-        coef = st.sidebar.number_input("Coeficiente del paraboloide:", value=1.0)
-        superficie = Paraboloide((-5, 5), (-5, 5), coef)
-    elif seleccion == "Sinusoide":
-        frecuencia = st.sidebar.number_input("Frecuencia de la sinusoide:", value=1.0)
-        superficie = Sinusoide((-5, 5), (-5, 5), frecuencia)
-    elif seleccion == "Hiperboloide":
-        coef = st.sidebar.number_input("Coeficiente del hiperboloide:", value=1.0)
-        superficie = Hiperboloide((-5, 5), (-5, 5), coef)
-    elif seleccion == "Cono":
-        coef = st.sidebar.number_input("Coeficiente del cono:", value=1.0)
-        superficie = Cono((-5, 5), (-5, 5), coef)
-    elif seleccion == "Cilindro":
-        radio = st.sidebar.number_input("Radio del cilindro:", value=1.0)
-        superficie = Cilindro((-5, 5), (-5, 5), radio)
-    elif seleccion == "Hiperboloide Una Hoja":
-        coef = st.sidebar.number_input("Coeficiente del hiperboloide de una hoja:", value=1.0)
-        superficie = HiperboloideUnaHoja((-5, 5), (-5, 5), coef)
-    elif seleccion == "Hiperboloide Dos Hojas":
-        coef = st.sidebar.number_input("Coeficiente del hiperboloide de dos hojas:", value=1.0)
-        superficie = HiperboloideDosHojas((-5, 5), (-5, 5), coef)
-    elif seleccion == "Esfera":
-        radio = st.sidebar.number_input("Radio de la esfera:", value=1.0)
-        superficie = Esfera((-5, 5), (-5, 5), radio)
-    elif seleccion == "Cargar Datos":
-        cargar_datos()
-        return
+    if tipo == "Plano":
+        parametro_label = "Pendiente"
+        parametro = st.number_input(parametro_label, value=1.0)
+        superficie = Plano((-5, 5), (-5, 5), parametro)
+    elif tipo == "Paraboloide":
+        parametro_label = "Coeficiente"
+        parametro = st.number_input(parametro_label, value=1.0)
+        superficie = Paraboloide((-5, 5), (-5, 5), parametro)
+    elif tipo == "Sinusoide":
+        parametro_label = "Frecuencia"
+        parametro = st.number_input(parametro_label, value=1.0)
+        superficie = Sinusoide((-5, 5), (-5, 5), parametro)
+    elif tipo == "Hiperboloide":
+        a = st.number_input("a", value=1.0)
+        b = st.number_input("b", value=1.0)
+        c = st.number_input("c", value=1.0)
+        superficie = Hiperboloide((-5, 5), (-5, 5), a, b, c)
+    elif tipo == "Conica":
+        a = st.number_input("a", value=1.0)
+        b = st.number_input("b", value=1.0)
+        superficie = Conica((-5, 5), (-5, 5), a, b)
+    elif tipo == "Toroide":
+        R = st.number_input("R", value=1.0)
+        r = st.number_input("r", value=0.5)
+        superficie = Toroide((-5, 5), (-5, 5), R, r)
+    elif tipo == "Cubo":
+        lado = st.number_input("Lado", value=1.0)
+        superficie = Cubo(lado)
+    elif tipo == "Piramide":
+        base = st.number_input("Base", value=1.0)
+        altura = st.number_input("Altura", value=1.0)
+        superficie = Piramide(base, altura)
+    elif tipo == "Cilindro":
+        radio = st.number_input("Radio", value=1.0)
+        altura = st.number_input("Altura", value=1.0)
+        superficie = Cilindro(radio, altura)
 
-    visualizador = Visualizador3DPlotly(superficie)
-    visualizador.mostrar_con_plotly()
+    if st.button("Visualizar"):
+        visualizador = Visualizador3DPlotly(superficie)
+        visualizador.mostrar_con_plotly()
+        x, y, z = superficie.generar_datos()
+        guardar_datos(x, y, z)
 
-    x, y, z = superficie.generar_datos()
-    guardar_datos(x, y, z)
+    st.subheader("O cargar datos desde un archivo")
+    cargar_datos()
 
 if __name__ == "__main__":
     main()
