@@ -1,5 +1,5 @@
 import streamlit as st
-from figuritas import *
+from figuras import *
 from visualizador import Visualizador3DPlotly, cargar_datos, guardar_datos
 
 def main():
